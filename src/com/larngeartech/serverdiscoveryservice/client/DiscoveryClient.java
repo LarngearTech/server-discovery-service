@@ -57,7 +57,11 @@ public class DiscoveryClient implements Runnable {
     
     // do something after receiving server's IP address 
     protected void postProcess() {
-        System.out.println("Server IP is " + this.getServerIp());        
+        System.out.println("Server IP is " + this.getServerIp());
+        
+        // Open web browser with the server ip address
+        WebBrowser browser = new WebBrowser();
+        browser.openUrl("http://" + this.getServerIp());
     }
     
     public static void main(String args[]) {
