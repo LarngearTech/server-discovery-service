@@ -17,8 +17,7 @@ import java.util.logging.Logger;
  * @author ping
  */
 public class DiscoveryServer implements Runnable {
-
-    
+   
     protected DatagramSocket discoverySocket = null;
     //protected MulticastSocket discoverySocket = null;
     protected int discoveryPort;
@@ -37,6 +36,29 @@ public class DiscoveryServer implements Runnable {
         this.interval = interval;
     }
     
+    public int getDiscoveryPort() {
+        return this.discoveryPort;
+    }
+    
+    public void setDiscoveryPort(int port) {
+        this.discoveryPort = port;
+    }
+    
+    public String getToken() {
+        return this.token;
+    }
+    
+    public void setToken(String token) {
+        this.token = token;
+    }
+    
+    public int getInterval() {
+        return this.interval;
+    }
+    
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
 
     public void stop() {
         Thread.currentThread().interrupt();
