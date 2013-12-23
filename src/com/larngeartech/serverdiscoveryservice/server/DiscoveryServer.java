@@ -67,13 +67,11 @@ public class DiscoveryServer implements Runnable {
     @Override
     public void run() {
         try {
-            discoverySocket = new DatagramSocket(discoveryPort);
-            System.out.println("Open discovery port " + discoveryPort);
+            discoverySocket = new DatagramSocket();
             byte[] bcastData = token.getBytes();
             while (!Thread.currentThread().isInterrupted()) {
                 DatagramPacket bcastPacket = new DatagramPacket(bcastData, bcastData.length, InetAddress.getByName(Configuration.DEFAULT_BROADCAST_ADDR), this.discoveryPort);
                 discoverySocket.send(bcastPacket);
-                //System.out.println("Broadcast discovery message to " + TabConConfiguration.DEFAULT_MULTICAST_ADDR);
                 Thread.sleep(interval);
             }
         } catch (IOException e) {

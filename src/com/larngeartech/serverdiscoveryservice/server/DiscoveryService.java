@@ -11,7 +11,7 @@ package com.larngeartech.serverdiscoveryservice.server;
 public class DiscoveryService {
     
     public static void main(String args[]) {
-        new DiscoveryServer();
+        new Thread(new DiscoveryServer()).start();
     }
     
 }
