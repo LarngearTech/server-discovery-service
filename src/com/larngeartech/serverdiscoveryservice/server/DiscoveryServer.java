@@ -23,11 +23,20 @@ public class DiscoveryServer implements Runnable {
     //protected MulticastSocket discoverySocket = null;
     protected int discoveryPort;
     protected String token;
+    protected int interval;
 
-    public DiscoveryServer(int discoveryPort, String token) {
+    public DiscoveryServer() {
+        this.discoveryPort = Configuration.DEFAULT_DISCOVERY_PORT;
+        this.token = Configuration.DEFAULT_TOKEN;
+        this.interval = Configuration.DEFAULT_DISCOVERY_INTERVAL;
+    }
+    
+    public DiscoveryServer(int discoveryPort, String token, int interval) {
         this.discoveryPort = discoveryPort;
         this.token = token;
+        this.interval = interval;
     }
+    
 
     public void stop() {
         Thread.currentThread().interrupt();
@@ -38,12 +47,12 @@ public class DiscoveryServer implements Runnable {
         try {
             discoverySocket = new DatagramSocket(discoveryPort);
             System.out.println("Open discovery port " + discoveryPort);
-            byte[] bcastData = Configuration.DEFAULT_TOKEN.getBytes();
+            byte[] bcastData = token.getBytes();
             while (!Thread.currentThread().isInterrupted()) {
-                DatagramPacket bcastPacket = new DatagramPacket(bcastData, bcastData.length, InetAddress.getByName(Configuration.DEFAULT_BROADCAST_ADDR), Configuration.DEFAULT_DISCOVERY_PORT);
+                DatagramPacket bcastPacket = new DatagramPacket(bcastData, bcastData.length, InetAddress.getByName(Configuration.DEFAULT_BROADCAST_ADDR), this.discoveryPort);
                 discoverySocket.send(bcastPacket);
                 //System.out.println("Broadcast discovery message to " + TabConConfiguration.DEFAULT_MULTICAST_ADDR);
-                Thread.sleep(Configuration.DEFAULT_DISCOVERY_INTERVAL);
+                Thread.sleep(interval);
             }
         } catch (IOException e) {
             e.printStackTrace();
