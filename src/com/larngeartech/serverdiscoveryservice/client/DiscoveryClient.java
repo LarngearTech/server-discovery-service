@@ -61,7 +61,7 @@ public class DiscoveryClient implements Runnable {
         
         // Open web browser with the server ip address
         WebBrowser browser = new WebBrowser();
-        browser.openUrl("http://" + this.getServerIp());
+        browser.openUrl("http://" + this.getServerIp() + "/tabblio/zhake");
     }
     
     public static void main(String args[]) {
