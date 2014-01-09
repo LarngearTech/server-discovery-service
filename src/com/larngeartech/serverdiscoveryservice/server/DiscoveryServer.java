@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,21 +68,27 @@ public class DiscoveryServer implements Runnable {
     @Override
     public void run() {
         try {
-            discoverySocket = new DatagramSocket();
             byte[] bcastData = token.getBytes();
             while (!Thread.currentThread().isInterrupted()) {
-                DatagramPacket bcastPacket = new DatagramPacket(bcastData, bcastData.length, InetAddress.getByName(Configuration.DEFAULT_BROADCAST_ADDR), this.discoveryPort);
-                discoverySocket.send(bcastPacket);
-                Thread.sleep(interval);
+                try {
+                    if (discoverySocket == null) {
+                        discoverySocket = new DatagramSocket();
+                    }
+                    DatagramPacket bcastPacket = new DatagramPacket(bcastData, bcastData.length, InetAddress.getByName(Configuration.DEFAULT_BROADCAST_ADDR), this.discoveryPort);
+                    discoverySocket.send(bcastPacket);
+                    Thread.sleep(interval);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    Logger.getLogger(DiscoveryServer.class.getName()).log(Level.SEVERE, null, ex); 
+                    if (discoverySocket != null) {
+                       discoverySocket.close();
+                    }
+                    Thread.sleep(interval);                  
+                } 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (InterruptedException ex) {
+            ex.printStackTrace();
             Logger.getLogger(DiscoveryServer.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (discoverySocket != null) {
-                discoverySocket.close();
-            }
-        }
+        } 
     }
 }
